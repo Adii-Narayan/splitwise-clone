@@ -1,6 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 
+// Access your backend base URL from the environment
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const GroupForm = ({ onGroupCreated }: { onGroupCreated: (group: any) => void }) => {
   const [name, setName] = useState("");
   const [userNames, setUserNames] = useState("");
@@ -11,12 +14,12 @@ const GroupForm = ({ onGroupCreated }: { onGroupCreated: (group: any) => void })
     const users = userNames.split(",").map((name) => ({ name: name.trim() }));
 
     try {
-      const res = await axios.post("http://localhost:8000/groups", { name, users });
+      const res = await axios.post(`${BASE_URL}/groups`, { name, users });
       onGroupCreated(res.data);
       setName("");
       setUserNames("");
     } catch (err) {
-      console.error("Failed to create group:", err);
+      console.error("❌ Failed to create group:", err);
     }
   };
 

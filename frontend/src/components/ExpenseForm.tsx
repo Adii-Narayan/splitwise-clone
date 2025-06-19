@@ -7,6 +7,8 @@ interface ExpenseFormProps {
   onExpenseAdded?: () => void;
 }
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const ExpenseForm = ({ groups, onGroupSelect, onExpenseAdded }: ExpenseFormProps) => {
   const [groupId, setGroupId] = useState("");
   const [description, setDescription] = useState("");
@@ -47,7 +49,7 @@ const ExpenseForm = ({ groups, onGroupSelect, onExpenseAdded }: ExpenseFormProps
     };
 
     try {
-      await axios.post(`http://localhost:8000/groups/${groupId}/expenses`, payload);
+      await axios.post(`${BASE_URL}/groups/${groupId}/expenses`, payload);
       setSuccessMsg("✅ Expense added successfully!");
       if (onExpenseAdded) onExpenseAdded();
 
@@ -56,7 +58,7 @@ const ExpenseForm = ({ groups, onGroupSelect, onExpenseAdded }: ExpenseFormProps
       setPaidBy("");
       setSplitRatios([]);
     } catch (err) {
-      console.error("Failed to add expense:", err);
+      console.error("❌ Failed to add expense:", err);
       setErrorMsg("❌ Failed to add expense. Please try again.");
     }
   };
@@ -139,7 +141,7 @@ const ExpenseForm = ({ groups, onGroupSelect, onExpenseAdded }: ExpenseFormProps
         type="submit"
         className="bg-purple-700 text-white font-bold px-4 py-2 rounded-xl hover:bg-purple-600 shadow-md hover:shadow-purple-500 transition"
       >
-        Add Expense
+        ➕ Add Expense
       </button>
     </form>
   );

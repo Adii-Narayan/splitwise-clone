@@ -4,6 +4,9 @@ import GroupForm from "./components/GroupForm";
 import ExpenseForm from "./components/ExpenseForm";
 import Balances from "./components/Balances";
 
+// use environment variable
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 function App() {
   const [groups, setGroups] = useState<any[]>([]);
   const [selectedGroup, setSelectedGroup] = useState<any | null>(null);
@@ -11,12 +14,14 @@ function App() {
   const [expenses, setExpenses] = useState<any[]>([]);
 
   useEffect(() => {
-    axios.get("http://localhost:8000/groups").then((res) => setGroups(res.data));
+    axios.get(`${BASE_URL}/groups`)
+      .then((res) => setGroups(res.data))
+      .catch((err) => console.error("Error fetching groups:", err));
   }, []);
 
   const refreshBalances = async (groupId: number) => {
     try {
-      const res = await axios.get(`http://localhost:8000/groups/${groupId}/balances`);
+      const res = await axios.get(`${BASE_URL}/groups/${groupId}/balances`);
       setBalances(res.data);
     } catch (error) {
       console.error("Failed to fetch balances", error);
@@ -26,7 +31,7 @@ function App() {
 
   const refreshExpenses = async (groupId: number) => {
     try {
-      const res = await axios.get(`http://localhost:8000/groups/${groupId}/expenses`);
+      const res = await axios.get(`${BASE_URL}/groups/${groupId}/expenses`);
       setExpenses(res.data);
     } catch (error) {
       console.error("Failed to fetch expenses", error);
