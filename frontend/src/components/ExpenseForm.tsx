@@ -148,3 +148,4 @@ const ExpenseForm = ({ groups, onGroupSelect, onExpenseAdded }: ExpenseFormProps
 };
 
 export default ExpenseForm;
+
