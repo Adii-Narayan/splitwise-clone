@@ -9,11 +9,12 @@ app = FastAPI()
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://splitwise-frontend-6jxy.onrender.com/"],  # Or ["*"] for dev only
+    allow_origins=["https://splitwise-frontend-6jxy.onrender.com"],  # ✅ No trailing slash
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
 
 # Create tables
 Base.metadata.create_all(bind=engine)
