@@ -20,8 +20,11 @@ class User(UserBase):
 class GroupBase(BaseModel):
     name: str
 
+class UserInGroup(BaseModel):
+    name: str
+
 class GroupCreate(GroupBase):
-    user_ids: List[int]
+    users: List[UserInGroup]
 
 class Group(GroupBase):
     id: int
@@ -65,4 +68,3 @@ class BalanceResponse(BaseModel):
     from_: int
     to: int
     amount: float
-
