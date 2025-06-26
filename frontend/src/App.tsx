@@ -6,6 +6,7 @@ import Balances from "./components/Balances";
 
 // Use environment variable for backend base URL
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+console.log("📦 Backend API:", BASE_URL);
 
 function App() {
   const [groups, setGroups] = useState<any[]>([]);
