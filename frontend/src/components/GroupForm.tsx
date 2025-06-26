@@ -1,10 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 
-// Access your backend base URL from the environment
+// ✅ Access your backend base URL from the environment
 const BASE_URL = import.meta.env.VITE_API_BASE_URL;
-axios.post(`${BASE_URL}/groups`, ...);
-
 
 const GroupForm = ({ onGroupCreated }: { onGroupCreated: (group: any) => void }) => {
   const [name, setName] = useState("");
