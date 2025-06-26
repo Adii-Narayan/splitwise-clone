@@ -1,5 +1,5 @@
 interface BalancesProps {
-  balances: any[];
+  balances: { from_: number; to: number; amount: number }[];
   group?: { name: string };
 }
 
@@ -21,7 +21,9 @@ const Balances = ({ balances, group }: BalancesProps) => {
               key={i}
               className="text-sm text-purple-200 bg-gray-800 px-3 py-1 rounded-md shadow-md"
             >
-              👤 User {b.from_} owes 👤 User {b.to}: <span className="text-green-400 font-bold">₹{b.amount.toFixed(2)}</span>
+              👤 <span className="font-medium text-white">User {b.from_}</span> owes{" "}
+              <span className="font-medium text-white">User {b.to}</span>:
+              <span className="text-green-400 font-bold"> ₹{b.amount.toFixed(2)}</span>
             </li>
           ))}
         </ul>
