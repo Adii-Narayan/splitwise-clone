@@ -11,18 +11,16 @@ router = APIRouter(
     tags=["Balances"]
 )
 
+# === Get Group Balances ===
 @router.get("/{group_id}/balances", response_model=List[schemas.BalanceResponse])
 def get_group_balances(group_id: int, db: Session = Depends(get_db)):
-    print("Checking balances for group", group_id)
-
     group = db.query(models.Group).filter(models.Group.id == group_id).first()
     if not group:
         raise HTTPException(status_code=404, detail="Group not found")
 
     expenses = db.query(models.Expense).filter(models.Expense.group_id == group_id).all()
-    print("Expenses found:", len(expenses))
 
-    # Initialize balances
+    # Track balances: balances[from_user][to_user] = amount owed
     balances: Dict[int, Dict[int, float]] = defaultdict(lambda: defaultdict(float))
 
     for expense in expenses:
@@ -32,18 +30,17 @@ def get_group_balances(group_id: int, db: Session = Depends(get_db)):
 
         for split in splits:
             if split.user_id == payer:
-                continue  # Skip payer owing themselves
+                continue  # Skip if user paid for their own share
 
-            # Compute split amount based on percentage if not directly provided
             split_amount = split.amount
             if split_amount is None and split.percentage is not None:
                 split_amount = (split.percentage / 100.0) * total_amount
 
-            balances[split.user_id][payer] += round(split_amount or 0.0, 2)
+            if split_amount:
+                balances[split.user_id][payer] += round(split_amount, 2)
 
-    # Convert to normal dict to avoid RuntimeError during iteration
+    # Convert to regular dict for safe iteration
     balances_copy = {k: dict(v) for k, v in balances.items()}
-
     simplified_balances = []
     processed_pairs = set()
 
