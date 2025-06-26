@@ -19,21 +19,20 @@ def create_group(group: schemas.GroupCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_group)
 
-    for user_id in group.user_ids:
-        # Optional: check if user exists, or create dummy user
-        user = db.query(models.User).filter(models.User.id == user_id).first()
-        if not user:
-            user = models.User(id=user_id, name=f"User {user_id}")
-            db.add(user)
+    for user in group.users:
+        existing_user = db.query(models.User).filter(models.User.name == user.name).first()
+        if not existing_user:
+            existing_user = models.User(name=user.name)
+            db.add(existing_user)
             db.commit()
-            db.refresh(user)
-        group_user = models.GroupUser(group_id=new_group.id, user_id=user.id)
+            db.refresh(existing_user)
+
+        group_user = models.GroupUser(group_id=new_group.id, user_id=existing_user.id)
         db.add(group_user)
 
     db.commit()
     db.refresh(new_group)
 
-    # Fetch users back to return in response
     users = (
         db.query(models.User)
         .join(models.GroupUser, models.User.id == models.GroupUser.user_id)
