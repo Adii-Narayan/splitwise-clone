@@ -6,10 +6,14 @@ from .database import Base, engine
 # Initialize app
 app = FastAPI()
 
+origins = [
+    "http://localhost:5173",
+    "https://splitwise-frontend-6jxy.onrender.com",
+]
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://splitwise-frontend-6jxy.onrender.com"],  # ✅ No trailing slash
+    allow_origins=origins,  # ✅ No trailing slash
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
